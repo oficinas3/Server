@@ -25,6 +25,18 @@ app.post('/robo', function(req, res) {
     res.json({requestBody: req.body})
 });
 
+app.post('/autenticate', function(req, res) {
+    getData.autenticate(function(result) {
+    res.json(result);
+    },req.body);
+});
+
+app.post('/balanceCheck', function(req, res) {
+    getData.balaceCheck(function(result) {
+    res.json(result);
+    },req.body);
+});
+
 app.listen(3000, function() {
   console.log('Nosso Server esta escutando na porta 3000!');
 });

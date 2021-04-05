@@ -1,5 +1,6 @@
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";
+
+const url = "mongodb+srv://followyolo:PNIgIlScd8AGo8dZ@followyolo.aa13r.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 
 class SaveData {
@@ -10,6 +11,16 @@ class SaveData {
             
             console.log(body);
             dbo.collection("Robos").insertOne(body);
+            db.close();
+        });
+    }; 
+    insertUser(body){
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            var dbo = db.db("followyolo");
+            
+            console.log(body);
+            dbo.collection("User").insertOne(body);
             db.close();
         });
     }; 
