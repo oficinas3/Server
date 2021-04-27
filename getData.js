@@ -135,4 +135,21 @@ async function marketPoints(callback) {
   return callback(call,200);
 };
 
-module.exports = {getAllUsers,autenticate,balaceCheck,getAllRobos,getAllActiveUsers,getMap,getRobot,usercalls,marketPoints};
+async function getPoint(callback,id) {
+
+  const database = client.db("followyolo");
+  var goto = database.collection("Goto");
+  var robo = await goto.findOne({robot_id:id});
+  return callback(robo,200);
+};
+
+module.exports = {getAllUsers,
+                autenticate,
+                balaceCheck,
+                getAllRobos,
+                getAllActiveUsers,
+                getMap,
+                getRobot,
+                usercalls,
+                marketPoints,
+                getPoint};

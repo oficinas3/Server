@@ -6,6 +6,7 @@ var express = require('express');
 var app = express();
 app.use(express.json())
 
+
 app.get('/robots', function(req, res) {
     get.getAllRobos(function(result) {
     res.json(result);
@@ -64,6 +65,11 @@ app.post('/calladmin', function(req, res) {
     },req.body);
 });
 
+app.delete('/calladmin', function(req, res) {
+    save.deletecalladmin(function(result,statusCode) {
+        res.status(statusCode).json(result);
+    },req.body);
+});
 app.get('/usercalls', function(req, res) {
     get.usercalls(function(result,statusCode) {
         res.status(statusCode).json(result);
@@ -74,6 +80,24 @@ app.get('/market/points', function(req, res) {
     get.marketPoints(function(result,statusCode) {
         res.status(statusCode).json(result);
     });
+});
+
+app.post('/robot/:id/goto', function(req, res) {
+    save.savePoint(function(result,statusCode) {
+        res.status(statusCode).json(result);
+    },req.params.id,req.body);
+});
+
+app.get('/robot/:id/goto', function(req, res) {
+    get.getPoint(function(result,statusCode) {
+        res.status(statusCode).json(result);
+    },req.params.id);
+});
+
+app.delete('/robot/:id/goto', function(req, res) {
+    save.deletePoint(function(result,statusCode) {
+        res.status(statusCode).json(result);
+    },req.params.id,req.body);
 });
 
 app.post('/save/map', function(req, res) {
@@ -129,4 +153,6 @@ app.get('/', function(req, res) {
 });
 
 app.set('port', process.env.PORT || 3000); // Process.env.PORT change automatically the port IF 3000 port is being used.
+
 app.listen(app.get('port'), () => console.log(`Node server listening on port ${app.get('port')}!`));
+

@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-
+const mongodb = require('mongodb');
 const url = "mongodb+srv://followyolo:PNIgIlScd8AGo8dZ@followyolo.aa13r.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 const client = new MongoClient(url);
@@ -233,4 +233,56 @@ async function calladmin(callback,body) {
     //console.log(date);
     return callback({"message":"success"},200);
 };
-module.exports = {insertRobo,insertUser,addBalance,startRent,endRent,saveMap,deletMap,saveLost,calladmin};
+
+async function deletecalladmin(callback,body) {
+    
+    var database = client.db("followyolo");
+    var base = database.collection("Calls");
+    var del = await base.deleteOne({_id : mongodb.ObjectId(body._id)});
+    if(del.deletedCount==0)
+        return callback({"message":"call not found"},400);
+    return callback({"message":"Delete success"},200);
+
+};
+async function savePoint(callback,id,body) {
+    
+    const database = client.db("followyolo");
+    var goto = database.collection("Goto");
+    var robo = await goto.findOne({robot_id:id});
+    console.log(robo);
+    if(robo){
+        return callback({"message":"Robot still has a point to go"},400);
+    }
+    var robos = database.collection("Market_XY");
+    var ponto = await robos.findOne({point_name : body.point_name});
+    console.log(ponto);
+    if(!ponto){
+        return callback({"message":"Point not found"},400);
+    }
+    var robos = database.collection("Goto");
+    var robo = robos.insertOne({robot_id:id,point_name:ponto.point_name,point_x:ponto.point_x,point_y:ponto.point_y});
+    return callback({"message":"Point save"},200);
+};
+
+async function deletePoint(callback,id,body) {
+    
+    const database = client.db("followyolo");
+    var robos = database.collection("Goto");
+    var ponto = await robos.deleteOne({robot_id : id});
+    if(ponto.deletedCount==0)
+        return callback({"message":"GoTo not found to delete"},400);
+    return callback({"message":"Point Deleted"},200);
+};
+
+module.exports = {insertRobo,
+                insertUser,
+                addBalance,
+                startRent,
+                endRent,
+                saveMap,
+                deletMap,
+                saveLost,
+                calladmin,
+                deletecalladmin,
+                savePoint,
+                deletePoint};
